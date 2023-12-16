@@ -2,6 +2,6 @@
 
 enum Roles : string
 {
-    case REGULAR = 'asd';
+    case REGULAR = 'regular';
     case ADMINISTRATOR = 'administrator';
 }
