@@ -1,7 +1,47 @@
 body {
-    background-color: #f8fff4;
+    background: whitesmoke;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
 }
 
-table, th, td {
+.navbar {
+    position: relative;
+    padding: 15px;
+    background-color: #333;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.navbar a, .logout-button {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    margin: 0 5px; /* Adjusted margin for links */
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center; /* Center text vertically */
+}
+
+.logout-button {
+    font-size: 16px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.navbar a:hover, .logout-button:hover {
+    background-color: #555;
+}
+
+.logout-form {
+    margin: 0;
+}
+
+table, td, th{
     border: 1px solid black;
+    table-layout: fixed;
 }

@@ -2,21 +2,30 @@
 session_start();
 
 if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true):?>
-    <?php include 'service/authorization.php' ?>
+    <?php
+    include 'service/authorization.php' ?>
     <html lang="en">
     <link rel="stylesheet" href="stylesheet.css">
     <body>
-    <div style="right: 0; position:absolute; padding: 0 10px">
-        <form action="logout.php" method="post">
+    <div class="navbar">
+        <a href="/index.php">Home</a>
+        <?php if (isAdmin()): ?>
+            <a href="/users.php">Users</a>
+        <?php endif; ?>
+        <form action="logout.php" method="post" class="logout-form">
             <input type="hidden" name="token" value="<?php echo $_SESSION['token'] ?? '' ?>">
 
-            <button type="submit">
+            <button type="submit" class="logout-button">
                 Logout
             </button>
         </form>
     </div>
-    <p>Welcome aboard, <?php echo $_SESSION['username'] ?>!</p>
+
+    <p style="font-size: 22px; text-align: center">Welcome aboard, <?php echo $_SESSION['username'] ?>!</p>
+
     <hr>
+
+    <p style="text-align: center; font-weight: bold">Some info</p>
     <table style="width: 100%; text-align: center">
         <tr>
             <th>Role</th>
