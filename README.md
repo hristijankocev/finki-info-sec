@@ -1,4 +1,4 @@
-# Information security - 2023/2024/Z - homework 2
+# Information security - 2023/2024/Z - homework (lab 2,3)
 
 ## Information security in a web application
 
@@ -66,3 +66,20 @@ In every form that the user submits, a *hidden* input field containing the sessi
 After the user submits a form, before anything, the session token is compared to the token sent by the user making the 
 request. If they match, this tells us that the user indeed, made the request himself. If they do not match, a 
 `405 Method Not Allowed` response is returned. 
+
+### Authorization
+
+#### User roles
+- Administrator
+  - i.e. can access `/users.php` page to view all users that are in the DB
+- Regular
+  - gets a `HTTP ERROR 403` response when trying to visit pages or executing actions not allowed for **regular** users 
+
+When a request is sent to an endpoint that should have **RBAC**, before doing the main business logic of the endpoint, a
+simple check is made to make sure that the currently logged-in user can execute such actions with. Code snippet:
+```
+function isAdmin(): bool
+{
+    return getRole() === Roles::ADMINISTRATOR->value;
+}
+```
