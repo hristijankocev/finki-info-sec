@@ -14,22 +14,27 @@ function register(&$bag, &$username, &$email): void
 
     if ($username !== '' && $password !== '' && $repeatPassword !== '' && $email !== '') {
         if ($password === $repeatPassword) {
-            # Check if the username/email already exist
-            if (checkIfUsernameExists($conn, $username)) {
-                $bag['errors'] = 'Username already taken';
-            } else if (checkIfEmailExists($conn, $email)) {
-                $bag['errors'] = 'Email already taken';
-            } else {
-                # Prepare the SQL statement, sanitize it before execution
-                pg_prepare($conn, "get_user",
-                    'INSERT INTO USERS (username, password, email) VALUES ($1, $2, $3)');
+            if(strlen($password) > 8){
+                # Check if the username/email already exist
+                if (checkIfUsernameExists($conn, $username)) {
+                    $bag['errors'] = 'Username already taken';
+                } else if (checkIfEmailExists($conn, $email)) {
+                    $bag['errors'] = 'Email already taken';
+                } else {
+                    # Prepare the SQL statement, sanitize it before execution
+                    pg_prepare($conn, "get_user",
+                        'INSERT INTO USERS (username, password, email) VALUES ($1, $2, $3)');
 
-                $result = pg_execute($conn, "get_user",
-                    array($username, password_hash($password, PASSWORD_DEFAULT), $email));
-                if ($result) {
-                    header('Location: index.php');
+                    $result = pg_execute($conn, "get_user",
+                        array($username, password_hash($password, PASSWORD_DEFAULT), $email));
+                    if ($result) {
+                        header('Location: index.php');
+                    }
                 }
+            } else {
+                $bag['errors'] = 'Password length must be 8 chars or more';
             }
+
         } else {
             $bag['errors'] = 'Passwords need to match';
         }
