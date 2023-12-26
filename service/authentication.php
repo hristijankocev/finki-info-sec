@@ -14,7 +14,7 @@ function register(&$bag, &$username, &$email): void
 
     if ($username !== '' && $password !== '' && $repeatPassword !== '' && $email !== '') {
         if ($password === $repeatPassword) {
-            if(strlen($password) > 8){
+            if (isPasswordInputValid($password)) {
                 # Check if the username/email already exist
                 if (checkIfUsernameExists($conn, $username)) {
                     $bag['errors'] = 'Username already taken';
@@ -32,7 +32,8 @@ function register(&$bag, &$username, &$email): void
                     }
                 }
             } else {
-                $bag['errors'] = 'Password length must be 8 chars or more';
+                $bag['errors'] = 'Password length must be at least 8 characters, contain uppercase & lowercase 
+                and a special character.';
             }
 
         } else {
@@ -132,4 +133,14 @@ function verifyToken(): void
         header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
         exit;
     }
+}
+
+function isPasswordInputValid($password): bool
+{
+    $uppercase = preg_match('@[A-Z]@', $password);
+    $lowercase = preg_match('@[a-z]@', $password);
+    $number = preg_match('@\d@', $password);
+    $specialChars = preg_match('@[^\w]@', $password);
+
+    return $uppercase and $lowercase and $number and $specialChars;
 }
