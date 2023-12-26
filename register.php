@@ -1,4 +1,7 @@
 <?php
+
+use function service\register;
+
 include 'service/authentication.php';
 
 session_start();

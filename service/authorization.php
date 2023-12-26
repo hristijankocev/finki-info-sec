@@ -1,4 +1,9 @@
 <?php
+
+namespace service;
+
+use Roles;
+
 include 'model/enum/Roles.php';
 
 
@@ -26,4 +31,9 @@ function isAdmin(): bool
 function isRegular(): bool
 {
     return getRole() === Roles::REGULAR->value;
+}
+
+function isModerator(): bool
+{
+    return getRole() === Roles::MODERATOR->value;
 }

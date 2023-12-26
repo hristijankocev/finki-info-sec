@@ -1,4 +1,10 @@
 <?php
+
+use function service\getRole;
+use function service\isAdmin;
+use function service\isModerator;
+use function service\isRegular;
+
 session_start();
 
 if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true):?>
@@ -29,13 +35,15 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true):?>
     <table style="width: 100%; text-align: center">
         <tr>
             <th>Role</th>
-            <th>IsAdmin</th>
             <th>IsRegular</th>
+            <th>IsModerator</th>
+            <th>IsAdmin</th>
         </tr>
         <tr>
             <td><?php echo getRole() ?></td>
-            <td><?php echo isAdmin() ? 'yes' : 'no' ?></td>
             <td><?php echo isRegular() ? 'yes' : 'no' ?></td>
+            <td><?php echo isModerator() ? 'yes' : 'no' ?></td>
+            <td><?php echo isAdmin() ? 'yes' : 'no' ?></td>
         </tr>
     </table>
     <br>

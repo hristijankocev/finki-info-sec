@@ -1,4 +1,7 @@
 <?php
+
+namespace service;
+
 function register(&$bag, &$username, &$email): void
 {
     verifyToken();
