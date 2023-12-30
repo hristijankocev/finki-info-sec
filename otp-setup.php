@@ -38,19 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['isLoggedIn']) && $
                 echo json_encode($response, JSON_THROW_ON_ERROR);
                 die();
             }
-            $response = array('message' => "Code expired or invalid");
-            echo json_encode($response, JSON_THROW_ON_ERROR);
+            header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
             die();
         }
 
-        $response = array('message' => "Invalid payload, $otpSecret, $otpToken");
-        echo json_encode($response, JSON_THROW_ON_ERROR);
+        header($_SERVER['SERVER_PROTOCOL'] . ' 422 Unprocessable Entity');
         die();
 
     } catch (JsonException|IncompatibleWithGoogleAuthenticatorException|InvalidCharactersException|SecretKeyTooShortException $e) {
-        $response = array('message' => "Oops... $otpToken, $otpSecret, $e");
-        /** @noinspection PhpUnhandledExceptionInspection */
-        echo json_encode($response, JSON_THROW_ON_ERROR);
+        header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error');
         die();
     }
 }
