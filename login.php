@@ -58,6 +58,11 @@ if (($requestMethod === 'POST') && isset($_POST['submit'])) {
             <input type="password" name="password" id="password">
         </div>
 
+        <div style="margin: 5px 0">
+            <label for="password">OTP (if 2FA enabled):</label>
+            <input type="text" name="otp_token" id="otp_token">
+        </div>
+
         <div>
             <input type="submit" name="submit" value="Login">
         </div>

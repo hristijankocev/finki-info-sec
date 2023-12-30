@@ -2,6 +2,13 @@
 
 namespace service;
 
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
+use PragmaRX\Google2FA\Google2FA;
+
+require 'vendor/autoload.php';
+
 function register(&$bag, &$username, &$email): void
 {
     verifyToken();
@@ -91,6 +98,7 @@ function login(&$bag, &$username): void
     # Sanitize user input before using it in queries
     $username = pg_escape_string($conn, $_POST['username']);
     $password = pg_escape_string($conn, $_POST['password']);
+    $otpKey = pg_escape_string($conn, $_POST['otp_token']);
 
     if ($username !== '' && $password !== '') {
         # Prepare the SQL statement, sanitize it before execution
@@ -101,10 +109,29 @@ function login(&$bag, &$username): void
             $user = pg_fetch_assoc($result);
 
             if ($user && password_verify($password, $user['password'])) {
+
+                // Verify OTP if 2FA activated
+                $otpSecret = $user['otp_secret'];
+                if (isset($otpSecret)) {
+                    $gfa = new Google2FA();
+                    try {
+                        $isOtpValid = $gfa->verifyKey($otpSecret, $otpKey);
+
+                        if (!$isOtpValid) {
+                            $bag['errors'] = 'Invalid OTP token.';
+                            return;
+                        }
+                    } catch (IncompatibleWithGoogleAuthenticatorException|InvalidCharactersException|SecretKeyTooShortException $e) {
+                        $bag['errors'] = 'Something went wrong while trying to verify the OTP :(.';
+                        return;
+                    }
+                }
+
                 # User found and correct credentials
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['username'] = htmlspecialchars($username);
                 $_SESSION['role'] = $user['role'];
+                $_SESSION['otp_secret'] = $user['otp_secret'];
 
                 header('Location: index.php');
             } else {
