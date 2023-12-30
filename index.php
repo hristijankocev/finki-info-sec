@@ -147,15 +147,28 @@ if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true):?>
                     },
                     body: JSON.stringify(data)
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            if (response.status === 401) {
+                                throw new Error('Unauthorized: Wrong or expired OTP.');
+                            } else if (response.status === 422) {
+                                throw new Error(`Could not process request, missing user input.`);
+                            } else if (response.status === 500) {
+                                throw new Error('There was an error on the server side. :(');
+                            } else {
+                                throw new Error('Something bad happened...');
+                            }
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         console.log('Success:', data);
                         alert(data['message']);
-                        window.location.reload()
+                        window.location.reload();
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('Setting up 2FA failed :(')
+                        console.error(error);
+                        alert(error);
                     });
             }
         </script>
