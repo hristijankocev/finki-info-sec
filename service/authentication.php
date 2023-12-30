@@ -104,6 +104,7 @@ function login(&$bag, &$username): void
                 # User found and correct credentials
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['username'] = htmlspecialchars($username);
+                $_SESSION['role'] = $user['role'];
 
                 header('Location: index.php');
             } else {
